@@ -2,7 +2,7 @@ package com.aqupd.aqupdhat;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 import static com.aqupd.aqupdhat.utils.AqLogger.*;
 import static net.minecraft.server.command.CommandManager.*;
@@ -11,13 +11,13 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 
 public class Main implements ModInitializer {
     @Override
     public void onInitialize() {
-        CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> {
+        CommandRegistrationCallback.EVENT.register(((dispatcher, context, dedicated) -> {
             dispatcher.register(literal("hat").executes(ctx -> {
                 ServerPlayerEntity user = ctx.getSource().getPlayer();
                 ItemStack hatStack = user.getMainHandStack();
@@ -30,7 +30,7 @@ public class Main implements ModInitializer {
                                 user.equipStack(EquipmentSlot.HEAD, hatStack);
                                 user.setStackInHand(Hand.MAIN_HAND, currentHat);
                             } else {
-                                ctx.getSource().sendError(new TranslatableText("aqupdhat.noitem"));
+                                ctx.getSource().sendError(Text.translatable("aqupdhat.noitem"));
                                 return -1;
                             }
                         }
@@ -43,11 +43,11 @@ public class Main implements ModInitializer {
                         }
                         return 1;
                     } else {
-                        ctx.getSource().sendError(new TranslatableText("aqupdhat.curse"));
+                        ctx.getSource().sendError(Text.translatable("aqupdhat.curse"));
                         return -1;
                     }
                 } else {
-                    ctx.getSource().sendError(new TranslatableText("aqupdhat.permission"));
+                    ctx.getSource().sendError(Text.translatable("aqupdhat.permission"));
                     return -1;
                 }
             }));
